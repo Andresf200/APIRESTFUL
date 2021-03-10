@@ -21,6 +21,10 @@ class UserController extends ApiController
         $this->middleware('client_credentials')->only(['store', 'resend']);
         $this->middleware('auth:api')->except(['store', 'verify', 'resend']);
         $this->middleware('transform.input:' . UserTransformer::class)->only(['store', 'update']);
+        $this->middleware('scope:manage-account')->only(['show','update ']);
+        $this->middleware('can:view,user')->only('show');
+        $this->middleware('can:update,user')->only('update');
+        $this->middleware('can:delete,user')->only('destroy');
     }
 
     /**
@@ -30,6 +34,7 @@ class UserController extends ApiController
      */
     public function index(): JsonResponse
     {
+        $this->allowedAdminAction();
         $usuarios = User::all();
         return $this->showAll($usuarios);
     }
@@ -106,6 +111,7 @@ class UserController extends ApiController
         }
 
         if ($request->has('admin')) {
+            $this->allowedAdminAction();
             if (!$user->esVerificado()){
                 return $this->errorResponse(
                     'Unicamente los usuarios verificados pueden cambiar su valor de administrador',
@@ -138,6 +144,13 @@ class UserController extends ApiController
         $user->delete();
         return $this->showOne($user);
     }
+
+    public function me(Request $request){
+        $user = $request->user();
+
+        return $this->showOne($user);
+    }
+
 
     public function verify($token): JsonResponse
     {

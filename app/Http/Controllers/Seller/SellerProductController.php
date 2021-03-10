@@ -8,6 +8,7 @@ use App\Models\Seller;
 use App\Models\User;
 use App\Transformers\ProductTransformer;
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +22,11 @@ class SellerProductController extends ApiController
     {
         parent::__construct();
         $this->middleware('transform.input:' . ProductTransformer::class)->only(['store', 'update']);
+        $this->middleware('scope:manage-products')->except('index');
+        $this->middleware('can:view,seller',seller)->only('index');
+        $this->middleware('can:sale,seller',seller)->only('store');
+        $this->middleware('can:edit-product,seller',seller)->only('update');
+        $this->middleware('can:delete-product,seller',seller)->only('destroy');
     }
 
     /**
@@ -31,8 +37,13 @@ class SellerProductController extends ApiController
      */
     public function index(Seller $seller): JsonResponse
     {
-        $products = $seller->products;
-        return $this->showAll($products);
+        if (request()->user()->tokenCan('read-general') || request()->user()->tokenCan('manage-products')){
+            $products = $seller->products;
+            return $this->showAll($products);
+        }
+
+        throw new AuthenticationException();
+
     }
 
     /**

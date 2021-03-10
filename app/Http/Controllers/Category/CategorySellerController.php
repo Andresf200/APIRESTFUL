@@ -21,6 +21,7 @@ class CategorySellerController extends ApiController
      */
     public function index(Category $category): JsonResponse
     {
+        $this->allowedAdminAction();
         $sellers = $category->products()
             ->with('seller')
             ->get()

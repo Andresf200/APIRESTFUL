@@ -35,7 +35,9 @@
                     <ul class="navbar-nav mr-auto">
                         @if (Auth::check())
                             <li>
-                                <a href="{{ route('personal-tokens') }}"> My tokens </a>
+                                <a href="{{ route('personal-tokens') }}"> My Tokens </a>
+                                <a href="{{ route('personal-clients') }}"> My Clients </a>
+                                <a href="{{ route('authorized-clients') }}"> Authorized Clients  </a>
                             </li>
                         @endif
                     </ul>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\ApiController;
 use App\Models\Buyer;
+use Illuminate\Auth\Access\Gate;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 
 class BuyerController extends ApiController
@@ -11,6 +13,8 @@ class BuyerController extends ApiController
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('scope:read-general')->only('show');
+        $this->middleware('can:view,buyer')->only('show');
     }
 
     /**
@@ -20,6 +24,8 @@ class BuyerController extends ApiController
      */
     public function index(): JsonResponse
     {
+        $this->allowedAdminAction();
+
         $compradores = Buyer::has('transactions')->get();
         return $this->showAll($compradores);
     }

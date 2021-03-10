@@ -40,6 +40,7 @@ class CategoryController extends ApiController
      */
     public function store(Request $request): JsonResponse
     {
+        $this->allowedAdminAction();
         $rules = [
             'name' => 'required',
             'description' => 'required'
@@ -72,6 +73,7 @@ class CategoryController extends ApiController
      */
     public function update(Request $request, Category $category): JsonResponse
     {
+        $this->allowedAdminAction();
         $category->fill($request->only([
             'name',
             'description'
@@ -95,6 +97,7 @@ class CategoryController extends ApiController
      */
     public function destroy(Category $category): JsonResponse
     {
+        $this->allowedAdminAction();
         $category->delete();
         return $this->showOne($category);
     }

@@ -21,6 +21,7 @@ class CategoryTransactionController extends ApiController
      */
     public function index(Category $category): JsonResponse
     {
+        $this->allowedAdminAction();
         $transactions = $category->products()
             ->whereHas('transactions')
             ->with('transactions')

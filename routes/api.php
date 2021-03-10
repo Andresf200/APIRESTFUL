@@ -72,6 +72,7 @@ Route::resource('sellers.buyers', SellerBuyerController::class, ['only' => ['ind
 Route::resource('sellers.products', SellerProductController::class, ['except' => ['create', 'show', 'edit']]);
 
 // Users
+Route::name('me')->get('users/me', [UserController::class, 'me']);
 Route::resource('users', UserController::class, ['except' => ['create', 'edit']]);
 Route::name('verify')->get('users/verify/{token}', [UserController::class, 'verify']);
 Route::name('resend')->get('users/{user}/resend', [UserController::class, 'resend']);

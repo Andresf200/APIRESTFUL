@@ -22,6 +22,10 @@ use App\Http\Controllers\HomeController;
 Auth::routes(['register' => false]);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/home/my-tokens', [HomeController::class, 'getTokens'])->name('personal-tokens');
+Route::get('/home/my-clients', [HomeController::class, 'getClients'])->name('personal-clients');
+Route::get('/home/my-authorized-clients', [HomeController::class, 'getAuthorizedClients'])
+    ->name('authorized-clients');
+
 
 Route::get('/', function (){
     return view('welcome');
